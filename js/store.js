@@ -15,6 +15,8 @@
     { id: "f3", name: "مودات ومابات فايف ام", description: "مابات ومودات بجودة عالية وأداء ممتاز.", category: "fivem", price: 30 },
   ];
   let products = [], filter = "all";
+  let query = new URLSearchParams(location.search).get("q") || "";
+  document.addEventListener("razq:search", (e) => { query = e.detail || ""; renderProducts(); });
 
   /* ---------- المنتجات ---------- */
   async function loadProducts() {
@@ -36,8 +38,9 @@
         </div></div></article>`;
   }
   function renderProducts() {
-    const list = products.filter((p) => filter === "all" || p.category === filter);
-    $("#grid").innerHTML = list.length ? list.map(card).join("") : `<div class="empty">لا توجد منتجات في هذا القسم حالياً</div>`;
+    const qq = query.toLowerCase();
+    const list = products.filter((p) => (filter === "all" || p.category === filter) && (!qq || `${p.name} ${p.description || ""}`.toLowerCase().includes(qq)));
+    $("#grid").innerHTML = list.length ? list.map(card).join("") : `<div class="empty">${query ? "لا توجد نتائج للبحث" : "لا توجد منتجات في هذا القسم حالياً"}</div>`;
     observeReveal($("#grid"));
   }
   $("#grid").addEventListener("click", (e) => {
@@ -127,5 +130,5 @@
     });
   }
 
-  drawStarInput(); syncReviewUI(); loadProducts(); loadReviews();
+  drawStarInput(); syncReviewUI(); loadProducts().then(() => { if (query) $("#products").scrollIntoView(); }); loadReviews();
 })();

@@ -19,6 +19,7 @@
     headset: '<path d="M3 11h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-5zm0 0a9 9 0 1 1 18 0m0 0v5a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3z"/><path d="M21 16v2a4 4 0 0 1-4 4h-5"/>',
     ticket: '<path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"/><path d="M13 5v2M13 17v2M13 11v2"/>',
     rules: '<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v4a2 2 0 0 0 2 2h4M10 9H8M16 13H8M16 17H8"/>',
+    search: '<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>',
     x: '<path d="M18 6 6 18M6 6l12 12"/>',
     plus: '<path d="M5 12h14M12 5v14"/>',
     minus: '<path d="M5 12h14"/>',
@@ -148,6 +149,7 @@
           <a href="rules.html" class="${page === "rules.html" ? "active" : ""}">القوانين</a>
         </nav>
         <div class="hdr-act">
+          <button class="icon-btn" id="searchBtn" aria-label="بحث">${ic("search")}</button>
           <select class="cur-sel" id="curSel" aria-label="العملة"><option>KWD</option></select>
           <button class="icon-btn" id="themeBtn" aria-label="تبديل الثيم"></button>
           <button class="icon-btn" id="cartBtn" aria-label="السلة">${ic("cart")}<span class="badge" id="cartBadge">0</span></button>
@@ -191,6 +193,22 @@
           ${(CFG.AUTH_PROVIDERS || ["discord"]).includes("google") ? `<button class="btn btn-google" data-provider="google">${ic("google")} المتابعة بحساب جوجل</button>` : ""}
         </div>
         <p class="note" id="authNote"></p>
+      </div></div>
+      <div class="modal" id="searchModal"><div class="box" style="text-align:start">
+        <button class="x" data-close>${ic("x")}</button>
+        <h3 style="margin-bottom:14px">${ic("search")} البحث</h3>
+        <form id="searchForm" autocomplete="off"><input type="text" id="searchIn" placeholder="ابحث عن منتج..." maxlength="60"></form>
+      </div></div>
+      <div class="modal" id="adminModal"><div class="box">
+        <button class="x" data-close>${ic("x")}</button>
+        <img src="assets/logo.png" alt="Razq">
+        <h3>دخول الإدارة</h3>
+        <p>أدخل بيانات حساب الأدمن</p>
+        <form class="stack" id="adminForm" autocomplete="off">
+          <input type="text" id="admU" placeholder="اسم المستخدم" required autocomplete="username">
+          <input type="password" id="admP" placeholder="كلمة السر" required autocomplete="current-password">
+          <button class="btn btn-primary" type="submit">دخول</button>
+        </form>
       </div></div>
       <div class="modal" id="doneModal"><div class="box">
         <button class="x" data-close>${ic("x")}</button>
@@ -357,6 +375,41 @@
     }
   }
 
+  /* ---------- البحث + الدخول السري للإدارة ---------- */
+  const isHome = () => { const f = location.pathname.split("/").pop(); return f === "" || f === "index.html"; };
+  function openSearch() { $("#searchModal").classList.add("show"); setTimeout(() => $("#searchIn").focus(), 60); }
+  const isKeyword = (q) => !!CFG.ADMIN_KEYWORD && q === CFG.ADMIN_KEYWORD;
+  async function adminLogin(u, p) {
+    if (!sb) return toast("قاعدة البيانات غير مربوطة", "err");
+    const email = u.includes("@") ? u : `${u}@${CFG.ADMIN_EMAIL_DOMAIN || "razq.admin"}`;
+    const { data, error } = await sb.auth.signInWithPassword({ email, password: p });
+    if (error) return toast("بيانات الدخول غير صحيحة", "err");
+    const { data: row } = await sb.from("admins").select("user_id").eq("user_id", data.user.id).maybeSingle();
+    if (!row) { await sb.auth.signOut(); return toast("بيانات الدخول غير صحيحة", "err"); }
+    location.href = "admin/";
+  }
+  function bindSearch() {
+    $("#searchBtn").onclick = openSearch;
+    $("#searchIn").addEventListener("input", (e) => {
+      const q = e.target.value.trim();
+      if (isHome() && !isKeyword(q)) document.dispatchEvent(new CustomEvent("razq:search", { detail: q }));
+    });
+    $("#searchForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const q = $("#searchIn").value.trim();
+      if (isKeyword(q)) {
+        $("#searchIn").value = "";
+        $("#searchModal").classList.remove("show");
+        $("#adminModal").classList.add("show");
+        setTimeout(() => $("#admU").focus(), 60);
+        return;
+      }
+      if (isHome()) { $("#searchModal").classList.remove("show"); document.dispatchEvent(new CustomEvent("razq:search", { detail: q })); location.hash = "#products"; }
+      else location.href = "index.html?q=" + encodeURIComponent(q);
+    });
+    $("#adminForm").addEventListener("submit", (e) => { e.preventDefault(); adminLogin($("#admU").value.trim(), $("#admP").value); });
+  }
+
   /* ---------- تشغيل ---------- */
   function init() {
     buildShell();
@@ -364,6 +417,7 @@
     $("#themeBtn").onclick = () => applyTheme(currentTheme() === "dark" ? "light" : "dark");
     $("#burger").onclick = () => $("#nav").classList.toggle("show");
     $$("#nav a").forEach((a) => a.addEventListener("click", () => $("#nav").classList.remove("show")));
+    bindSearch();
     $("#cartBtn").onclick = openCart;
     $("#closeCart").onclick = closeCart;
     $("#overlay").onclick = closeCart;
