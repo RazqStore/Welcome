@@ -14,7 +14,7 @@ window.RAZQ_CONFIG = {
   // (غيّرها لكلمة لا يعرفها أحد). كلمة السر الحقيقية تنحفظ في Supabase وليست هنا.
   ADMIN_KEYWORD: "razq",
   // اسم المستخدم يتحول لإيميل بهذا الدومين الوهمي: owner  ->  owner@razq.admin
-  ADMIN_EMAIL_DOMAIN: "razq-panel-77",
+  ADMIN_EMAIL_DOMAIN: "razq99.admin",
 
   // رابط دعوة سيرفر الديسكورد (يفتح عند إتمام الطلب)
   DISCORD_INVITE: "https://discord.gg/razq",
