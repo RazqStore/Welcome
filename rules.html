@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>القوانين | Razq Store</title>
+<meta name="description" content="قوانين وشروط الشراء في Razq Store. بشرائك من المتجر فأنت توافق على جميع الشروط والأحكام.">
+<meta name="theme-color" content="#0d0e11">
+<link rel="icon" href="assets/logo.png" type="image/png">
+<meta property="og:title" content="القوانين | Razq Store">
+<meta property="og:description" content="قوانين وشروط الشراء في Razq Store.">
+<meta property="og:image" content="https://YOUR-USER.github.io/razq/assets/banner.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<script>try{var t=localStorage.getItem("razq-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<main class="wrap">
+  <div class="rules-hero">
+    <div class="badge-ic" id="rIcon"></div>
+    <h1>القوانين — Rules</h1>
+    <p>اقرأ القوانين جيداً قبل الشراء، فبشرائك توافق عليها كاملة</p>
+  </div>
+
+  <!-- لتعديل القوانين: عدّل النصوص هنا مباشرة -->
+  <ol class="rules" id="rules">
+    <li class="rule reveal"><span class="num"></span><span>يمنع طلب استرداد المبلغ بعد الدفع ويجب التأكد من قرارك قبل الدفع</span></li>
+    <li class="rule reveal"><span class="num"></span><span>في حال خروجك من المتجر لا يوجد لديك ضمان للمنتجات ولا تعويض</span></li>
+    <li class="rule reveal"><span class="num"></span><span>اثناء استلامك الطلب يرجى منك تشغيل التصوير حفاظاً على حقك</span></li>
+    <li class="rule reveal"><span class="num"></span><span>عند شراءك من المتجر ف انت توافق على جميع الشروط والاحكام</span></li>
+    <li class="rule reveal"><span class="num"></span><span>لا يشملك التعويض في حال ما قيمت في روم التقييمات</span></li>
+    <li class="rule reveal"><span class="num"></span><span>لا يتم استقبال اي طلب الا عن طريق فتح التذكرة</span></li>
+    <li class="rule reveal"><span class="num"></span><span>لا يمكن نقل البوستات الى سيرفر آخر بعد ضربهم</span></li>
+    <li class="rule reveal"><span class="num"></span><span>يلزم دفع المبلغ كامل لتسليم الطلب</span></li>
+    <li class="rule reveal"><span class="num"></span><span>عند تسليم الطلب لا يتم استرجاعه</span></li>
+    <li class="rule reveal"><span class="num"></span><span>الاسعار غير قابلة للتفاوض</span></li>
+    <li class="rule reveal"><span class="num"></span><span>تحرق منشن تايم اوت</span></li>
+  </ol>
+</main>
+
+<div id="site-footer"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="js/common.js"></script>
+<script>
+  Razq.init();
+  document.getElementById("rIcon").innerHTML = Razq.ic("rules");
+  // ترقيم بالأرقام العربية + تأخير متدرج للأنميشن
+  const toAr = (n) => String(n).replace(/\d/g, (d) => "٠١٢٣٤٥٦٧٨٩"[d]);
+  document.querySelectorAll(".rule").forEach((li, i) => {
+    li.querySelector(".num").textContent = toAr(i + 1);
+    li.style.setProperty("--d", i * 0.06 + "s");
+  });
+  Razq.observeReveal();
+</script>
+</body>
+</html>

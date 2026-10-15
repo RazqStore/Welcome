@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Razq Store</title>
+<meta name="description" content="Razq Store — حياكم الله نورتو. وجهتكم الاحترافية لمنتجات الديسكورد وفايف ام: جودة عالية، تسليم سريع، ودعم متواصل عبر التذاكر.">
+<meta name="theme-color" content="#0d0e11">
+<link rel="icon" href="assets/logo.png" type="image/png">
+<link rel="apple-touch-icon" href="assets/logo.png">
+
+<!-- معاينة الرابط في الديسكورد / تويتر / واتساب -->
+<!-- مهم: بدّل YOUR-USER بإسم حسابك في GitHub (أو دومينك) ليصير الرابط كاملاً -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Razq Store">
+<meta property="og:title" content="Razq Store | حياكم الله نورتو">
+<meta property="og:description" content="حياكم الله نورتو ✦ وجهتكم الاحترافية لمنتجات الديسكورد وفايف ام — جودة عالية، تسليم سريع، ودعم متواصل عبر التذاكر.">
+<meta property="og:image" content="https://YOUR-USER.github.io/razq/assets/banner.png">
+<meta property="og:image:width" content="1920">
+<meta property="og:image:height" content="1080">
+<meta property="og:url" content="https://YOUR-USER.github.io/razq/">
+<meta property="og:locale" content="ar_AR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Razq Store | حياكم الله نورتو">
+<meta name="twitter:description" content="حياكم الله نورتو ✦ وجهتكم الاحترافية لمنتجات الديسكورد وفايف ام — جودة عالية، تسليم سريع، ودعم متواصل.">
+<meta name="twitter:image" content="https://YOUR-USER.github.io/razq/assets/banner.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<script>try{var t=localStorage.getItem("razq-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+</head>
+<body id="top">
+
+<div id="site-header"></div>
+
+<main>
+  <!-- الهيرو -->
+  <section class="hero">
+    <div class="wrap">
+      <div class="hero-logo reveal"><img src="assets/logo.png" alt="Razq Store"></div>
+      <h1 class="reveal" style="--d:.1s">Razq<small>STORE</small></h1>
+      <p class="reveal" style="--d:.2s">حياكم الله نورتو ✦ وجهتكم الاحترافية لمنتجات الديسكورد وفايف ام — جودة عالية، تسليم سريع، ودعم متواصل.</p>
+      <div class="hero-cta reveal" style="--d:.3s">
+        <a class="btn btn-primary" href="#products" id="shopNow"></a>
+        <a class="btn btn-ghost" href="rules.html" id="rulesBtn"></a>
+      </div>
+      <div class="chips reveal" style="--d:.4s" id="chips"></div>
+    </div>
+  </section>
+
+  <!-- المنتجات -->
+  <section id="products">
+    <div class="wrap">
+      <div class="sec-head reveal"><h2>منتجاتنا</h2><p>اختر قسمك وأضف طلبك للسلة</p></div>
+      <div class="tabs reveal" id="tabs">
+        <button class="tab on" data-f="all">الكل</button>
+        <button class="tab" data-f="discord" id="tabD"></button>
+        <button class="tab" data-f="fivem" id="tabF"></button>
+      </div>
+      <div class="grid" id="grid"></div>
+    </div>
+  </section>
+
+  <!-- لماذا Razq -->
+  <section id="why">
+    <div class="wrap">
+      <div class="sec-head reveal"><h2>لماذا Razq</h2><p>نهتم بتجربتك من أول طلب لآخر استلام</p></div>
+      <div class="why" id="whyGrid"></div>
+    </div>
+  </section>
+
+  <!-- التقييمات -->
+  <section id="reviews">
+    <div class="wrap">
+      <div class="sec-head reveal"><h2>آراء العملاء</h2><p>تقييمات حقيقية من عملائنا</p></div>
+      <div class="rev-top">
+        <div class="rev-sum reveal">
+          <div class="big" id="avg">—</div>
+          <div id="avgStars"></div>
+          <p id="count">لا توجد تقييمات بعد</p>
+          <button class="btn btn-ghost btn-sm btn-block" id="reviewLogin" style="display:none">سجّل دخولك لإضافة تقييم</button>
+        </div>
+        <form class="review-form reveal" id="reviewForm">
+          <b>قيّم تجربتك معنا</b>
+          <div class="star-input" id="starInput"></div>
+          <textarea id="comment" rows="3" maxlength="400" placeholder="اكتب رأيك هنا..."></textarea>
+          <button class="btn btn-primary" type="submit" id="sendReview"></button>
+        </form>
+      </div>
+      <div class="reviews" id="reviewList"></div>
+    </div>
+  </section>
+</main>
+
+<div id="site-footer"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="js/common.js"></script>
+<script>
+  Razq.init();
+  const { ic, $ } = Razq;
+  // أيقونات الأقسام (SVG وليست إيموجي)
+  $("#shopNow").innerHTML = ic("cart") + " تسوق الآن";
+  $("#rulesBtn").innerHTML = ic("rules") + " القوانين";
+  $("#tabD").innerHTML = ic("discord") + " ديسكورد";
+  $("#tabF").innerHTML = ic("gamepad") + " فايف ام";
+  $("#sendReview").innerHTML = ic("star") + " إرسال التقييم";
+  $("#chips").innerHTML = [["discord", "منتجات ديسكورد"], ["gamepad", "منتجات فايف ام"], ["zap", "تسليم سريع"]]
+    .map(([i, t]) => `<span class="chip">${ic(i)} ${t}</span>`).join("");
+  $("#whyGrid").innerHTML = [
+    ["zap", "تسليم سريع", "نجهز طلبك ونسلمه في أسرع وقت ممكن."],
+    ["ticket", "الطلب عبر التذكرة", "كل الطلبات والدفع داخل سيرفر الديسكورد بشكل منظم."],
+    ["headset", "دعم متواصل", "فريقنا جاهز للرد على استفساراتك."],
+    ["rules", "قوانين واضحة", "شروط وأحكام معلنة مسبقاً لحقك وحقنا."],
+  ].map(([i, h, p], k) => `<div class="item reveal" style="--d:${k * 0.08}s"><div class="ico">${ic(i)}</div><h3>${h}</h3><p>${p}</p></div>`).join("");
+  Razq.observeReveal();
+</script>
+<script src="js/store.js"></script>
+</body>
+</html>
